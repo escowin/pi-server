@@ -1,0 +1,16 @@
+# Crontab Entries
+# Add these lines to your crontab with: crontab -e
+
+# DuckDNS update every 5 minutes
+*/5 * * * * /home/[username]/duckdns-update.sh
+
+# Weekly system updates (Sundays at 2 AM)
+0 2 * * 0 /mnt/external/scripts/update.sh
+
+# Daily backups (every day at 3 AM)
+0 3 * * * /mnt/external/scripts/backup.sh
+
+# Example with specific user (replace [username] with your actual username):
+# */5 * * * * /home/escowin/duckdns-update.sh
+# 0 2 * * 0 /mnt/external/scripts/update.sh
+# 0 3 * * * /mnt/external/scripts/backup.sh

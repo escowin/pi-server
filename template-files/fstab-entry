@@ -1,0 +1,10 @@
+# External Drive Auto-Mount Entry
+# Add this line to /etc/fstab for automatic mounting
+# Replace [DRIVE-UUID] with your actual drive UUID
+# Replace [filesystem-type] with your drive's filesystem (ext4, exfat, ntfs, etc.)
+
+UUID=[DRIVE-UUID] /mnt/external [filesystem-type] defaults,auto,users,rw,nofail 0 0
+
+# Example entries:
+# UUID=9CC4-411E /mnt/external exfat defaults,auto,users,rw,nofail 0 0
+# UUID=12345678-1234-1234-1234-123456789abc /mnt/external ext4 defaults,auto,users,rw,nofail 0 0

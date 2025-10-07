@@ -1,0 +1,27 @@
+# Log Rotation Configuration
+# Save this as /etc/logrotate.d/pi-server
+
+/mnt/external/logs/*.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    delaycompress
+    notifempty
+    create 644 [username] [username]
+    postrotate
+        # Restart services if needed
+        # docker compose restart nginx
+    endscript
+}
+
+# Example with specific user:
+# /mnt/external/logs/*.log {
+#     daily
+#     missingok
+#     rotate 7
+#     compress
+#     delaycompress
+#     notifempty
+#     create 644 escowin escowin
+# }

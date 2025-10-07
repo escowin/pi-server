@@ -1,0 +1,27 @@
+# UFW Firewall Rules
+# Run these commands to configure the firewall
+
+# Enable UFW
+sudo ufw enable
+
+# Set default policies
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Allow SSH (adjust port if you changed it)
+sudo ufw allow ssh
+# Alternative: sudo ufw allow 22/tcp
+# If you changed SSH port: sudo ufw allow 2222/tcp
+
+# Allow HTTP and HTTPS
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Allow local network access (adjust subnet as needed)
+sudo ufw allow from 192.168.1.0/24
+
+# Allow Portainer (if needed)
+sudo ufw allow 9000/tcp
+
+# Check status
+sudo ufw status verbose

@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/html:/usr/share/nginx/html
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    restart: unless-stopped
+  
+  portainer:
+    image: portainer/portainer-ce
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    restart: unless-stopped
+
+  # Add your applications here
+  # your-app:
+  #   build: ../apps/your-app
+  #   ports:
+  #     - "3000:3001"  # Map host port 3000 to container port 3001
+  #   volumes:
+  #     - ../apps/your-app:/app
+  #     - /app/node_modules
+  #   restart: unless-stopped
+  #   environment:
+  #     - NODE_ENV=production
+
+volumes:
+  portainer_data:
