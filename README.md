@@ -263,3 +263,4 @@ This project is open source and available under the [MIT License](LICENSE).
 - [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
 - [Lucide](https://lucide.dev/) for the icons
 - [Prism.js](https://prismjs.com/) for syntax highlighting
+ 
