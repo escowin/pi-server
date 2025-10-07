@@ -8,6 +8,12 @@
 - **Web Interface**: `http://[server-ip]`
 - **Portainer**: `http://[server-ip]:9000`
 
+### Remote Access (DuckDNS)
+- **Domain**: `[subdomain].duckdns.org`
+- **Web Interface**: `https://[subdomain].duckdns.org`
+- **Portainer**: `https://[subdomain].duckdns.org:9000`
+- **SSH Access**: `ssh [username]@[subdomain].duckdns.org`
+
 ### External Drive
 - **Mount Point**: `/mnt/external`
 - **Drive Type**: `[filesystem-type]` (e.g., exfat, ext4, ntfs)
@@ -31,7 +37,7 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/html:/usr/share/nginx/html
-      - ./ssl:/etc/nginx/ssl
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     restart: unless-stopped
   
   portainer:
@@ -72,11 +78,26 @@ docker ps
 ```nginx
 server {
     listen 80;
-    server_name localhost;
+    server_name [subdomain].duckdns.org;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name [subdomain].duckdns.org;
+    
+    ssl_certificate /etc/letsencrypt/live/[subdomain].duckdns.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/[subdomain].duckdns.org/privkey.pem;
+    
+    # Security headers
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
     
     location / {
         root /usr/share/nginx/html;
-        index index.html index.htm;
+        index index.html;
         try_files $uri $uri/ =404;
     }
 }
@@ -102,7 +123,7 @@ server {
         │   └── default.conf
         ├── html/
         │   └── index.html
-        └── ssl/    # SSL certificates (future use)
+        └── ssl/    # SSL certificates (mounted from /etc/letsencrypt)
 ```
 
 ## System Information
@@ -132,10 +153,12 @@ server {
 - [ ] Set up basic Docker services
 - [ ] Test local network access
 
-### Phase 2: Security (Optional)
+### Phase 2: Remote Access and Security
+- [ ] Set up DuckDNS dynamic DNS
+- [ ] Configure router port forwarding
+- [ ] Set up SSL certificates with Let's Encrypt
+- [ ] Configure nginx for HTTPS
 - [ ] Configure UFW firewall
-- [ ] Set up SSL certificates
-- [ ] Configure remote access
 - [ ] Set up fail2ban
 - [ ] Create isolated users
 
@@ -233,20 +256,24 @@ sudo systemctl restart docker
 ### Current Status Template
 - [ ] SSH access configured
 - [ ] Docker permissions set
+- [ ] Port forwarding configured
+- [ ] DuckDNS dynamic DNS active
+- [ ] SSL certificates installed and configured
+- [ ] HTTPS redirect configured
 - [ ] Firewall configured
-- [ ] SSL certificates installed
-- [ ] Remote access configured
 - [ ] Fail2ban configured
 
 ### Security Checklist
 1. Change default passwords
 2. Configure SSH key authentication
-3. Set up UFW firewall
-4. Install SSL certificates
-5. Configure remote access securely
-6. Set up fail2ban
-7. Regular security updates
-8. Backup important configurations
+3. Set up DuckDNS dynamic DNS
+4. Configure router port forwarding
+5. Install SSL certificates with Let's Encrypt
+6. Configure nginx for HTTPS with security headers
+7. Set up UFW firewall
+8. Set up fail2ban
+9. Regular security updates
+10. Backup important configurations
 
 ## Backup Information
 
@@ -302,10 +329,13 @@ sudo nano /etc/logrotate.d/pi-server
 - `[username]` - Your actual username
 - `[server-ip]` - Your Pi's IP address
 - `[hostname]` - Your Pi's hostname
+- `[subdomain]` - Your DuckDNS subdomain
 - `[DRIVE-UUID]` - Your external drive's UUID
 - `[filesystem-type]` - Your drive's filesystem
 - `[SIZE]` - Your drive's size
 - `[Brand/Model]` - Your hardware details
+- `[YOUR_TOKEN]` - Your DuckDNS token
+- `[YOUR_SUBDOMAIN]` - Your DuckDNS subdomain
 
 ### Optional Additions
 - Add more services to docker-compose.yml

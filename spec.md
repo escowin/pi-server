@@ -139,18 +139,42 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
 
 ## Phase 2: Remote Access and Security
 
-### Step 6: Configure Dynamic DNS (Optional but Recommended)
-1. **Choose a DDNS service**
-   - No-IP (free tier available)
-   - DuckDNS (free)
-   - Cloudflare (if you have a domain)
+### Step 6: Configure Dynamic DNS with DuckDNS
+1. **Set up DuckDNS account**
+   - Go to https://www.duckdns.org/
+   - Sign in with your preferred method (Google, Twitter, etc.)
+   - Choose a subdomain (e.g., `[subdomain]` for `[subdomain].duckdns.org`)
+   - Note down your token from the DuckDNS control panel
 
-2. **Set up DDNS client**
+2. **Install and configure DuckDNS client**
    ```bash
-   # For No-IP
-   sudo apt install -y noip2
-   sudo noip2 -C
-   # Follow the prompts to configure
+   # Create DuckDNS update script in home directory (external drive has noexec)
+   mkdir -p /mnt/external/logs
+   cat > ~/duckdns-update.sh << EOF
+   #!/bin/bash
+   # Replace YOUR_TOKEN and YOUR_SUBDOMAIN with your actual values
+   TOKEN="YOUR_TOKEN"
+   DOMAIN="YOUR_SUBDOMAIN"
+   
+   # Update DuckDNS
+   curl -s "https://www.duckdns.org/update?domains=\$DOMAIN&token=\$TOKEN&ip="
+   
+   # Log the update
+   echo "\$(date): DuckDNS updated for \$DOMAIN.duckdns.org" >> /mnt/external/logs/duckdns.log
+   EOF
+   
+   chmod +x ~/duckdns-update.sh
+   ```
+
+3. **Set up automatic updates**
+   ```bash
+   # Test the script first
+   ~/duckdns-update.sh
+   
+   # Add to crontab for updates every 5 minutes
+   crontab -e
+   # Add this line:
+   # */5 * * * * /home/[username]/duckdns-update.sh
    ```
 
 ### Step 7: Configure Router Port Forwarding
@@ -170,10 +194,11 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
    sudo apt install -y certbot python3-certbot-nginx
    ```
 
-2. **Generate SSL certificate**
+2. **Generate SSL certificate for DuckDNS domain**
    ```bash
-   sudo certbot --nginx -d your-domain.com
-   # Or for subdomain: sudo certbot --nginx -d pi.your-domain.com
+   # Replace with your actual DuckDNS subdomain
+   sudo certbot --nginx -d [subdomain].duckdns.org
+   # Certbot will automatically configure nginx with SSL
    ```
 
 ### Step 9: Configure Nginx for Security
@@ -187,16 +212,16 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
    ```nginx
    server {
        listen 80;
-       server_name your-domain.com;
+       server_name [subdomain].duckdns.org;
        return 301 https://$server_name$request_uri;
    }
    
    server {
        listen 443 ssl http2;
-       server_name your-domain.com;
+       server_name [subdomain].duckdns.org;
        
-       ssl_certificate /etc/nginx/ssl/fullchain.pem;
-       ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+       ssl_certificate /etc/letsencrypt/live/[subdomain].duckdns.org/fullchain.pem;
+       ssl_certificate_key /etc/letsencrypt/live/[subdomain].duckdns.org/privkey.pem;
        
        # Security headers
        add_header X-Frame-Options DENY;
@@ -324,7 +349,7 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
        compress
        delaycompress
        notifempty
-       create 644 pi pi
+       create 644 [username] [username]
    }
    ```
 
@@ -372,7 +397,7 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
    DATE=$(date +%Y%m%d_%H%M%S)
    
    # Backup important configs
-   tar -czf $BACKUP_DIR/configs_$DATE.tar.gz /etc/nginx /etc/ssl /home/pi/.ssh
+   tar -czf $BACKUP_DIR/configs_$DATE.tar.gz /etc/nginx /etc/letsencrypt /home/[username]/.ssh
    
    # Backup application data
    tar -czf $BACKUP_DIR/apps_$DATE.tar.gz /mnt/external/apps
@@ -395,12 +420,12 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
 ### Local Network Access
 - **Web Interface**: `http://[PI_IP_ADDRESS]`
 - **Portainer**: `http://[PI_IP_ADDRESS]:9000`
-- **SSH**: `ssh pi@[PI_IP_ADDRESS]`
+- **SSH**: `ssh [username]@[PI_IP_ADDRESS]`
 
 ### Remote Access (After DNS setup)
-- **Web Interface**: `https://your-domain.com`
-- **Portainer**: `https://your-domain.com:9000`
-- **SSH**: `ssh pi@your-domain.com`
+- **Web Interface**: `https://[subdomain].duckdns.org`
+- **Portainer**: `https://[subdomain].duckdns.org:9000`
+- **SSH**: `ssh [username]@[subdomain].duckdns.org`
 
 ## Security Checklist
 - [ ] SSH key authentication enabled
