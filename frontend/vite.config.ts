@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: process.env.NODE_ENV === 'production' ? '/pi-server-showcase/' : '/',
+  base: process.env.NODE_ENV === 'production' ? '/pi-server/' : '/',
   build: {
     outDir: 'dist',
     sourcemap: true
