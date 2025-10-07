@@ -1,23 +1,48 @@
-# Raspberry Pi Server Setup
+# Raspberry Pi Server Setup Guide
 
-A comprehensive guide for setting up a production-ready Raspberry Pi server with Docker, nginx, SSL, and application deployment capabilities.
+A comprehensive guide for setting up a production-ready Raspberry Pi server with Docker, nginx, SSL, and application deployment capabilities. This repository includes both detailed documentation and an interactive frontend showcase.
+
+## 📁 Project Structure
+
+```
+pi-server/
+├── docs/                    # Original documentation
+│   ├── setup-guide.md      # Complete step-by-step setup guide
+│   ├── pi-server-template.md # Server configuration template
+│   ├── full-stack-app-deployment-template.md # App deployment guide
+│   ├── wireguard-vpn-setup.md # VPN setup guide
+│   └── server-docs/        # Application-specific guides
+├── frontend/               # Interactive showcase (React + TypeScript)
+│   ├── src/               # React application source
+│   ├── public/            # Static assets
+│   ├── package.json       # Frontend dependencies
+│   └── ...               # Frontend configuration files
+├── template-files/         # Configuration templates
+│   ├── docker-compose.yml # Docker configuration
+│   ├── nginx-default.conf # Nginx configuration
+│   ├── wireguard-*.conf   # VPN configurations
+│   └── ...               # Other templates
+└── README.md              # This file
+```
 
 ## 🚀 Quick Start
 
-This repository contains everything you need to transform a Raspberry Pi into a powerful personal server:
+### Option 1: Interactive Frontend Showcase
+Experience the guide through a modern, interactive web interface:
 
-- **Complete setup guide** with step-by-step instructions
-- **Security hardening** with firewall, SSL, and intrusion prevention
-- **Application deployment** templates for full-stack applications
-- **Production-ready configuration** with automated backups and maintenance
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## 📚 Documentation
+### Option 2: Traditional Documentation
+Read the comprehensive markdown documentation:
 
-### Core Guides
-- **[Setup Guide](setup-guide.md)** - Complete step-by-step server setup (5 phases)
-- **[Server Template](pi-server-template.md)** - Reusable template for new servers
-- **[Full-Stack App Template](full-stack-app-deployment-template.md)** - Deploy Vite/React + Node.js apps
-- **[WireGuard VPN Setup](wireguard-vpn-setup.md)** - Secure remote access for Git operations
+- **[Setup Guide](docs/setup-guide.md)** - Complete step-by-step server setup (5 phases)
+- **[Server Template](docs/pi-server-template.md)** - Reusable template for new servers
+- **[Full-Stack App Template](docs/full-stack-app-deployment-template.md)** - Deploy Vite/React + Node.js apps
+- **[WireGuard VPN Setup](docs/wireguard-vpn-setup.md)** - Secure remote access for Git operations
 
 ## 🏗️ What You'll Build
 
@@ -84,9 +109,15 @@ The setup is organized into 5 logical phases:
 - Configure maintenance scripts
 - Test backup and restore procedures
 
+### Phase 6: WireGuard VPN Setup
+- Configure router port forwarding for VPN access
+- Install and configure WireGuard server on Pi
+- Set up WireGuard client on local machine
+- Test VPN connection and remote Git operations
+
 ## 🚀 Getting Started
 
-1. **Read the [Setup Guide](setup-guide.md)** for complete instructions
+1. **Read the [Setup Guide](docs/setup-guide.md)** for complete instructions
 2. **Follow each phase** in order for best results
 3. **Use the templates** for deploying your own applications
 4. **Reference the troubleshooting guides** if you encounter issues
@@ -101,7 +132,7 @@ After setup, you'll have a server accessible at:
 ## 🛠️ Application Deployment
 
 ### For Full-Stack Apps (Vite/React + Node.js)
-Use the **[Full-Stack App Template](full-stack-app-deployment-template.md)** which includes:
+Use the **[Full-Stack App Template](docs/full-stack-app-deployment-template.md)** which includes:
 - Multi-stage Docker builds
 - nginx proxy configuration
 - Static file serving
@@ -133,26 +164,6 @@ Use the **[Full-Stack App Template](full-stack-app-deployment-template.md)** whi
 2. Review the common issues and solutions
 3. Verify your configuration matches the examples
 4. Check Docker and nginx logs for specific errors
-
-## 📁 Repository Structure
-
-```
-pi-server/
-├── README.md                           # This file - entry point
-├── setup-guide.md                      # Complete setup instructions
-├── pi-server-template.md               # Server configuration template
-├── full-stack-app-deployment-template.md # App deployment template
-├── wireguard-vpn-setup.md              # Secure remote access guide
-├── server-docs/                        # Application-specific guides
-│   └── [app-name]-deployment-guide.md  # Application deployment guides
-├── template-files/                     # Configuration templates
-│   ├── wireguard-server.conf           # WireGuard server template
-│   ├── wireguard-client.conf           # WireGuard client template
-│   ├── docker-compose.yml              # Docker configuration template
-│   ├── nginx-default.conf              # Nginx configuration template
-│   └── [other templates...]            # Additional templates
-└── .gitignore                          # Git ignore rules
-```
 
 ## 🎉 Success Stories
 
@@ -187,3 +198,68 @@ For questions or issues:
 **Happy Server Building!** 🚀
 
 *Last updated: October 7, 2025*
+
+## 🎨 Customization
+
+### Adding New Phases
+1. Update `src/data/phases.ts` with new phase data
+2. Add route in `src/App.tsx`
+3. Update navigation in `src/components/Sidebar.tsx`
+
+### Styling
+- Modify `tailwind.config.js` for theme customization
+- Update `src/index.css` for global styles
+- Use Tailwind utility classes for component styling
+
+### Content
+- Edit phase content in `src/data/phases.ts`
+- Update metadata in `index.html`
+- Modify component text in respective files
+
+## 🔧 Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+### Code Style
+- ESLint configuration for consistent code style
+- Prettier for code formatting
+- TypeScript for type safety
+
+## 📱 Responsive Design
+
+The site is fully responsive with breakpoints:
+- **Mobile**: < 768px
+- **Tablet**: 768px - 1024px
+- **Desktop**: > 1024px
+
+## ♿ Accessibility
+
+- WCAG 2.1 AA compliant
+- Keyboard navigation support
+- Screen reader friendly
+- High contrast color scheme
+- Focus indicators
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🙏 Acknowledgments
+
+- [Raspberry Pi Foundation](https://www.raspberrypi.org/) for the hardware
+- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
+- [Lucide](https://lucide.dev/) for the icons
+- [Prism.js](https://prismjs.com/) for syntax highlighting

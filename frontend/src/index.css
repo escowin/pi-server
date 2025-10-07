@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-gray-950 text-gray-100;
+  }
+  
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-950;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-gray-800 text-gray-100 hover:bg-gray-700 focus:ring-gray-500;
+  }
+  
+  .btn-outline {
+    @apply btn border border-gray-700 bg-gray-800 text-gray-200 hover:bg-gray-700 focus:ring-gray-500;
+  }
+  
+  .card {
+    @apply bg-gray-900 rounded-xl shadow-sm border border-gray-800 p-6;
+  }
+  
+  .code-block {
+    @apply bg-gray-950 text-gray-100 rounded-lg p-4 font-mono text-sm overflow-x-auto border border-gray-800;
+  }
+  
+  .nav-link {
+    @apply flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors;
+  }
+  
+  .nav-link-active {
+    @apply nav-link bg-primary-900 text-primary-300;
+  }
+  
+  .nav-link-inactive {
+    @apply nav-link text-gray-400 hover:text-gray-200 hover:bg-gray-800;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-600;
+}
+
+/* Syntax highlighting overrides */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  @apply text-gray-500;
+}
+
+.token.punctuation {
+  @apply text-gray-400;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  @apply text-blue-400;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  @apply text-green-400;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  @apply text-yellow-400;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  @apply text-purple-400;
+}
+
+.token.function,
+.token.class-name {
+  @apply text-pink-400;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  @apply text-orange-400;
+}
