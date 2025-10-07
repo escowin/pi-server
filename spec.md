@@ -265,7 +265,41 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
    sudo ufw allow from 192.168.1.0/24  # Allow local network
    ```
 
-### Step 11: Create Isolated User for Applications
+### Step 11: Set Up SSH Key Authentication for GitHub
+1. **Generate SSH Key Pair**
+   ```bash
+   ssh-keygen -t ed25519 -C "[username]@github" -f ~/.ssh/id_ed25519
+   # Enter passphrase when prompted (optional but recommended)
+   ```
+
+2. **Display Public Key**
+   ```bash
+   cat ~/.ssh/id_ed25519.pub
+   # Copy the entire output (starts with ssh-ed25519 and ends with @github)
+   ```
+
+3. **Add Key to GitHub Account**
+   - Go to GitHub.com and sign in
+   - Click your profile picture → Settings
+   - In the left sidebar, click "SSH and GPG keys"
+   - Click "New SSH key"
+   - Give it a title like "Raspberry Pi Server"
+   - Paste your public key into the "Key" field
+   - Click "Add SSH key"
+
+4. **Test SSH Connection**
+   ```bash
+   ssh -T git@github.com
+   # Should return: "Hi [username]! You've successfully authenticated, but GitHub does not provide shell access."
+   ```
+
+5. **Clone Repository Using SSH**
+   ```bash
+   # Use SSH URL format instead of HTTPS
+   git clone git@github.com:[username]/[repository].git
+   ```
+
+### Step 12: Create Isolated User for Applications
 1. **Create application user**
    ```bash
    sudo adduser --system --group --home /mnt/external/apps appuser
@@ -283,7 +317,7 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
 
 ## Phase 3: Application Deployment
 
-### Step 12: Deploy Portfolio Applications
+### Step 13: Deploy Portfolio Applications
 1. **Create application structure**
    ```bash
    mkdir -p /mnt/external/apps/{portfolio,api,static}
@@ -292,8 +326,19 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
 2. **Example: Deploy a Node.js app**
    ```bash
    cd /mnt/external/apps
-   git clone https://github.com/yourusername/your-app.git
+   git clone git@github.com:yourusername/your-app.git
    cd your-app
+   
+   # Install Node.js and npm (if not already installed)
+   # Option 1: Install nvm for version management (Recommended)
+   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+   source ~/.bashrc
+   nvm install --lts
+   nvm use --lts
+   nvm alias default lts/*
+   
+   # Option 2: Direct installation
+   # sudo apt update && sudo apt install -y nodejs npm
    
    # Create Dockerfile
    cat > Dockerfile << EOF
@@ -306,6 +351,10 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
    CMD ["npm", "start"]
    EOF
    
+   # Build with Docker (recommended for external drives)
+   cd /mnt/external/docker
+   docker compose build your-app
+   
    # Add to docker-compose.yml
    ```
 
@@ -317,17 +366,20 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
        # ... existing nginx config
      
      portfolio-app:
-       build: ./apps/your-app
+       build: ../apps/your-app  # Note: ../apps/ not ./apps/
        ports:
          - "3000:3000"
        volumes:
-         - ./apps/your-app:/app
+         - ../apps/your-app:/app  # Correct path for external drives
+         - /app/node_modules      # Prevent overwriting node_modules
        restart: unless-stopped
+       environment:
+         - NODE_ENV=production
      
      # Add more apps as needed
    ```
 
-### Step 13: Set Up Monitoring and Logging
+### Step 14: Set Up Monitoring and Logging
 1. **Install monitoring tools**
    ```bash
    # System monitoring
@@ -355,12 +407,25 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
 
 ## Phase 4: Security Hardening
 
-### Step 14: Additional Security Measures
+### Step 15: Additional Security Measures
 1. **Disable unnecessary services**
    ```bash
+   # Disable services from starting on boot
    sudo systemctl disable bluetooth
    sudo systemctl disable avahi-daemon
+   
+   # Stop currently running services
+   sudo systemctl stop bluetooth
+   sudo systemctl stop avahi-daemon
+   
+   # Verify services are disabled and stopped
+   sudo systemctl is-enabled bluetooth    # should show "disabled"
+   sudo systemctl is-enabled avahi-daemon # should show "disabled"
+   sudo systemctl is-active bluetooth     # should show "inactive"
+   sudo systemctl is-active avahi-daemon  # should show "inactive"
    ```
+   
+   **Note**: avahi-daemon.socket may remain active for local network hostname resolution (this is fine).
 
 2. **Set up fail2ban**
    ```bash
@@ -370,6 +435,9 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
 
 3. **Regular security updates**
    ```bash
+   # Create scripts directory first (required before creating files)
+   mkdir -p /mnt/external/scripts
+   
    # Create update script
    cat > /mnt/external/scripts/update.sh << EOF
    #!/bin/bash
@@ -378,6 +446,7 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
    docker image prune -f
    EOF
    
+   # Make script executable
    chmod +x /mnt/external/scripts/update.sh
    
    # Add to crontab for weekly updates
@@ -387,7 +456,7 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
 
 ## Phase 5: Backup and Maintenance
 
-### Step 15: Set Up Automated Backups
+### Step 16: Set Up Automated Backups
 1. **Create backup script**
    ```bash
    mkdir -p /mnt/external/scripts
@@ -428,7 +497,8 @@ This guide will help you configure a Raspberry Pi 4 as a personal server to host
 - **SSH**: `ssh [username]@[subdomain].duckdns.org`
 
 ## Security Checklist
-- [ ] SSH key authentication enabled
+- [ ] SSH key authentication enabled for server access
+- [ ] SSH key authentication enabled for GitHub
 - [ ] Firewall configured
 - [ ] SSL certificates installed
 - [ ] Regular updates scheduled

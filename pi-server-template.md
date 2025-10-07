@@ -144,29 +144,44 @@ server {
 ## Setup Checklist
 
 ### Phase 1: Initial Setup
-- [ ] Flash Raspberry Pi OS to SD card
-- [ ] Enable SSH and configure WiFi
-- [ ] Update system packages
-- [ ] Install Docker and Docker Compose
-- [ ] Mount external drive
-- [ ] Create directory structure
-- [ ] Set up basic Docker services
-- [ ] Test local network access
+- [x] Flash Raspberry Pi OS to SD card
+- [x] Enable SSH and configure WiFi
+- [x] Update system packages
+- [x] Install Docker and Docker Compose
+- [x] Mount external drive
+- [x] Create directory structure
+- [x] Set up SSH key authentication for GitHub
+- [x] Set up basic Docker services
+- [x] Test local network access
 
 ### Phase 2: Remote Access and Security
-- [ ] Set up DuckDNS dynamic DNS
-- [ ] Configure router port forwarding
-- [ ] Set up SSL certificates with Let's Encrypt
-- [ ] Configure nginx for HTTPS
-- [ ] Configure UFW firewall
-- [ ] Set up fail2ban
-- [ ] Create isolated users
+- [x] Set up DuckDNS dynamic DNS
+- [x] Configure router port forwarding
+- [x] Set up SSL certificates with Let's Encrypt
+- [x] Configure nginx for HTTPS
+- [x] Configure UFW firewall
+- [x] Set up fail2ban
+- [x] Create isolated users
+- [x] Configure SSH key authentication for GitHub
 
 ### Phase 3: Application Deployment
-- [ ] Deploy portfolio applications
-- [ ] Set up monitoring
-- [ ] Configure logging
-- [ ] Test application access
+- [x] Deploy portfolio applications
+- [x] Set up monitoring
+- [x] Configure logging
+- [x] Test application access
+
+### Phase 4: Security Hardening
+- [x] Disable unnecessary services
+- [x] Set up fail2ban
+- [x] Configure regular security updates
+
+### Phase 5: Backup and Maintenance
+- [x] Set up automated backups
+- [x] Configure maintenance scripts
+- [x] Test backup and restore procedures
+
+## ✅ SETUP COMPLETE
+**All phases have been successfully implemented!**
 
 ## Troubleshooting Commands
 
@@ -251,10 +266,94 @@ df -h
 sudo systemctl restart docker
 ```
 
+### Node.js App Build Failures
+**Symptoms**: `npm install` fails with EPERM errors
+**Cause**: External drive restrictions preventing symlink creation
+
+**Solutions**:
+```bash
+# Option 1: Use Docker for building (Recommended)
+cd /mnt/external/docker
+docker compose build [app-name]
+
+# Option 2: Build in home directory
+cp -r /mnt/external/apps/[app-name] ~/[app-name]
+cd ~/[app-name]
+npm install && npm run build
+```
+
+### Docker Volume Mount Errors
+**Symptoms**: `chown /mnt/external/docker/apps/[app]: operation not permitted`
+**Solution**: Use correct paths in docker-compose.yml
+```yaml
+# Wrong: ./apps/your-app
+# Correct: ../apps/your-app
+volumes:
+  - ../apps/your-app:/app
+```
+
+### Web Interface Not Accessible
+**Symptoms**: Cannot access web interface locally or remotely
+**Solutions**:
+```bash
+# Check container status
+docker ps
+
+# Start containers if stopped
+cd /mnt/external/docker
+docker compose up -d
+
+# Install UFW if missing
+sudo apt install -y ufw
+sudo ufw enable
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+```
+
+## SSH Key Authentication for GitHub
+
+### Setup Process
+1. **Generate SSH Key Pair**
+   ```bash
+   ssh-keygen -t ed25519 -C "[username]@github" -f ~/.ssh/id_ed25519
+   # Enter passphrase when prompted (optional but recommended)
+   ```
+
+2. **Display Public Key**
+   ```bash
+   cat ~/.ssh/id_ed25519.pub
+   # Copy the entire output
+   ```
+
+3. **Add Key to GitHub**
+   - Go to GitHub.com → Settings → SSH and GPG keys
+   - Click "New SSH key"
+   - Title: "Raspberry Pi Server"
+   - Paste the public key
+   - Click "Add SSH key"
+
+4. **Test SSH Connection**
+   ```bash
+   ssh -T git@github.com
+   # Should return: "Hi [username]! You've successfully authenticated..."
+   ```
+
+5. **Clone Repository Using SSH**
+   ```bash
+   git clone git@github.com:[username]/[repository].git
+   ```
+
+### Benefits
+- No password prompts for Git operations
+- More secure than HTTPS with tokens
+- Works for all GitHub repositories
+- Automatic authentication for push/pull operations
+
 ## Security Notes
 
 ### Current Status Template
 - [ ] SSH access configured
+- [ ] SSH key authentication for GitHub configured
 - [ ] Docker permissions set
 - [ ] Port forwarding configured
 - [ ] DuckDNS dynamic DNS active
@@ -265,15 +364,16 @@ sudo systemctl restart docker
 
 ### Security Checklist
 1. Change default passwords
-2. Configure SSH key authentication
-3. Set up DuckDNS dynamic DNS
-4. Configure router port forwarding
-5. Install SSL certificates with Let's Encrypt
-6. Configure nginx for HTTPS with security headers
-7. Set up UFW firewall
-8. Set up fail2ban
-9. Regular security updates
-10. Backup important configurations
+2. Configure SSH key authentication for server access
+3. Configure SSH key authentication for GitHub
+4. Set up DuckDNS dynamic DNS
+5. Configure router port forwarding
+6. Install SSL certificates with Let's Encrypt
+7. Configure nginx for HTTPS with security headers
+8. Set up UFW firewall
+9. Set up fail2ban
+10. Regular security updates
+11. Backup important configurations
 
 ## Backup Information
 
