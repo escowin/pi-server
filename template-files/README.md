@@ -18,6 +18,11 @@ This directory contains template versions of all configuration files needed for 
 - **`logrotate-config`** - Log rotation configuration
 - **`ufw-rules`** - Firewall configuration commands
 
+### VPN Configuration
+- **`wireguard-server.conf`** - WireGuard server configuration template
+- **`wireguard-client.conf`** - WireGuard client configuration template
+- **`wireguard-setup-commands.sh`** - Complete WireGuard setup commands
+
 ## 🚀 Usage
 
 1. **Copy the files** you need to your server
@@ -43,6 +48,11 @@ This directory contains template versions of all configuration files needed for 
 | `YOUR_TOKEN` | DuckDNS token |
 | `YOUR_SUBDOMAIN` | DuckDNS subdomain |
 | `your-app` | Application name |
+| `[SERVER_PRIVATE_KEY]` | WireGuard server private key |
+| `[CLIENT_PUBLIC_KEY]` | WireGuard client public key |
+| `[CLIENT_PRIVATE_KEY]` | WireGuard client private key |
+| `[SERVER_PUBLIC_KEY]` | WireGuard server public key |
+| `[YOUR_DOMAIN_OR_IP]` | DuckDNS domain or public IP |
 
 ## 🔧 Customization
 
@@ -65,6 +75,7 @@ This directory contains template versions of all configuration files needed for 
 - **[Setup Guide](../setup-guide.md)** - Complete setup instructions
 - **[Full-Stack Template](../full-stack-app-deployment-template.md)** - Application deployment guide
 - **[Server Template](../pi-server-template.md)** - Server configuration template
+- **[WireGuard VPN Setup](../wireguard-vpn-setup.md)** - Secure remote access guide
 
 ---
 

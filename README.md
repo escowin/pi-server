@@ -17,6 +17,7 @@ This repository contains everything you need to transform a Raspberry Pi into a 
 - **[Setup Guide](setup-guide.md)** - Complete step-by-step server setup (5 phases)
 - **[Server Template](pi-server-template.md)** - Reusable template for new servers
 - **[Full-Stack App Template](full-stack-app-deployment-template.md)** - Deploy Vite/React + Node.js apps
+- **[WireGuard VPN Setup](wireguard-vpn-setup.md)** - Secure remote access for Git operations
 
 ## 🏗️ What You'll Build
 
@@ -27,6 +28,7 @@ This repository contains everything you need to transform a Raspberry Pi into a 
 - 📦 **Application Hosting**: Ready for portfolio applications
 - 🔄 **Automated Maintenance**: Daily backups, weekly updates
 - 🔑 **SSH Authentication**: Key-based authentication for GitHub and server access
+- 🔐 **VPN Access**: WireGuard VPN for secure remote Git operations
 
 ### Technology Stack
 - **OS**: Raspberry Pi OS Lite (64-bit)
@@ -140,15 +142,23 @@ pi-server/
 ├── setup-guide.md                      # Complete setup instructions
 ├── pi-server-template.md               # Server configuration template
 ├── full-stack-app-deployment-template.md # App deployment template
+├── wireguard-vpn-setup.md              # Secure remote access guide
 ├── server-docs/                        # Application-specific guides
-│   └── rowcalibur-deployment-guide.md  # RowCalibur deployment
+│   └── [app-name]-deployment-guide.md  # Application deployment guides
+├── template-files/                     # Configuration templates
+│   ├── wireguard-server.conf           # WireGuard server template
+│   ├── wireguard-client.conf           # WireGuard client template
+│   ├── docker-compose.yml              # Docker configuration template
+│   ├── nginx-default.conf              # Nginx configuration template
+│   └── [other templates...]            # Additional templates
 └── .gitignore                          # Git ignore rules
 ```
 
 ## 🎉 Success Stories
 
 This setup has been successfully used to deploy:
-- **RowCalibur PWA**: A Progressive Web Application for rowing challenges
+- **Progressive Web Applications (PWAs)**: React/Vue/Angular with offline capabilities
+- **Full-stack applications**: Frontend + Backend with API integration
 - **Portfolio websites**: Static and dynamic content
 - **API services**: Node.js backends with database integration
 - **Development environments**: Isolated development containers
