@@ -28,7 +28,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           
           <div className="flex items-center space-x-4">
             <a
-              href="https://github.com/yourusername/pi-server"
+              href="https://github.com/escowin/pi-server"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center px-3 py-2 text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-lg transition-colors"
@@ -37,7 +37,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
               <span className="hidden sm:inline">GitHub</span>
             </a>
             <a
-              href="https://yourusername.github.io/pi-server-showcase"
+              href="https://escowin.github.io/pi-server"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors"

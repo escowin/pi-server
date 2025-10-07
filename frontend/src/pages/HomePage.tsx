@@ -30,7 +30,7 @@ export default function HomePage() {
             <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
           <a
-            href="https://github.com/yourusername/pi-server"
+            href="https://github.com/escowin/pi-server"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-outline inline-flex items-center px-6 py-3 text-lg"
@@ -202,7 +202,7 @@ export default function HomePage() {
             <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
           <a
-            href="https://github.com/yourusername/pi-server"
+            href="https://github.com/escowin/pi-server"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-outline inline-flex items-center px-6 py-3 text-lg"
