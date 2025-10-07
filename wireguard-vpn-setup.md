@@ -271,16 +271,18 @@ ping 10.0.0.1
 # Check if you can access Pi's local network IP
 ping 192.168.1.XXX  # Replace with your Pi's actual local IP
 
-# Test SSH through VPN
-ssh [username]@10.0.0.1
+# Test SSH through VPN (use IP address for security)
+ssh [username]@192.168.1.XXX  # Use Pi's local IP, not hostname
 ```
+
+**Note**: Use the IP address (`192.168.1.XXX`) instead of the hostname (`escopi`) when connecting through VPN. This provides better security by limiting DNS resolution scope and ensuring you only access explicitly allowed network resources.
 
 ### Step 2: Configure Git for Remote Operations
 
 Once connected to VPN, you can access your Pi as if you're on the local network:
 
 ```bash
-# SSH into your Pi
+# SSH into your Pi (use IP address for security)
 ssh [username]@192.168.1.XXX
 
 # Clone repositories directly to your Pi
@@ -291,16 +293,20 @@ cd /path/to/existing/repo
 git pull origin main
 ```
 
+**Security Note**: Always use the IP address (`192.168.1.XXX`) when connecting through VPN rather than hostnames. This prevents DNS resolution issues and provides better network isolation security.
+
 ### Step 3: Set Up Git Aliases (Optional)
 
 Create convenient aliases for common operations:
 
 ```bash
 # Add to your local machine's ~/.bashrc or ~/.zshrc
-alias pi-ssh="ssh [username]@192.168.1.XXX"
+alias pi-ssh="ssh [username]@192.168.1.XXX"  # Use IP address for security
 alias pi-git-clone="ssh [username]@192.168.1.XXX 'git clone'"
 alias pi-git-pull="ssh [username]@192.168.1.XXX 'cd /path/to/repo && git pull'"
 ```
+
+**Security Best Practice**: All aliases use IP addresses instead of hostnames to maintain network isolation and prevent DNS resolution issues.
 
 ## Security Considerations
 
@@ -319,7 +325,16 @@ alias pi-git-pull="ssh [username]@192.168.1.XXX 'cd /path/to/repo && git pull'"
 - Use specific client IPs rather than broad ranges
 - Regularly review connected clients
 
-### 4. Monitoring
+### 4. DNS and Hostname Security
+**Why Use IP Addresses Instead of Hostnames:**
+- **Network Isolation**: VPN clients can only access explicitly allowed resources
+- **DNS Scope Limitation**: Prevents full local network DNS resolution
+- **Security Boundary**: Maintains clear separation between VPN and local networks
+- **Reduced Attack Surface**: Limits potential DNS-based attacks or information leakage
+
+**Best Practice**: Always use IP addresses (`192.168.1.XXX`) when connecting through VPN rather than hostnames (`escopi`).
+
+### 5. Monitoring
 ```bash
 # Check active connections
 sudo wg show
