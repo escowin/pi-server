@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense, useEffect } from 'react';
 import { Copy, Check } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+// Lazy load the syntax highlighter with our custom Prism config
+const SyntaxHighlighter = lazy(() => 
+  import('react-syntax-highlighter').then(module => ({
+    default: module.Prism
+  }))
+);
 
 interface CodeBlockProps {
   code: string;
@@ -12,6 +17,7 @@ interface CodeBlockProps {
 
 export default function CodeBlock({ code, language, title, description }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
+  const [theme, setTheme] = useState<any>(null);
 
   const handleCopy = async () => {
     try {
@@ -22,6 +28,24 @@ export default function CodeBlock({ code, language, title, description }: CodeBl
       console.error('Failed to copy code:', err);
     }
   };
+
+  // Lazy load the theme and our custom Prism configuration
+  useEffect(() => {
+    const loadLanguageAndTheme = async () => {
+      // Load theme
+      const themeModule = await import('react-syntax-highlighter/dist/esm/styles/prism');
+      setTheme(themeModule.vscDarkPlus);
+      
+      // Load our custom Prism configuration with only the languages we need
+      try {
+        await import('../lib/prism-config');
+      } catch (error) {
+        console.warn('Custom Prism configuration could not be loaded:', error);
+      }
+    };
+    
+    loadLanguageAndTheme();
+  }, []);
 
   return (
     <div className="bg-secondary-900 rounded-lg overflow-hidden shadow-lg">
@@ -49,20 +73,28 @@ export default function CodeBlock({ code, language, title, description }: CodeBl
           )}
         </button>
         
-        <SyntaxHighlighter
-          language={language}
-          style={vscDarkPlus}
-          customStyle={{
-            margin: 0,
-            padding: '1rem',
-            fontSize: '0.875rem',
-            lineHeight: '1.5',
-          }}
-          showLineNumbers
-          wrapLines
-        >
-          {code}
-        </SyntaxHighlighter>
+        <Suspense fallback={
+          <div className="p-4 text-gray-400 text-sm">
+            Loading syntax highlighter...
+          </div>
+        }>
+          {theme && (
+            <SyntaxHighlighter
+              language={language}
+              style={theme}
+              customStyle={{
+                margin: 0,
+                padding: '1rem',
+                fontSize: '0.875rem',
+                lineHeight: '1.5',
+              }}
+              showLineNumbers
+              wrapLines
+            >
+              {code}
+            </SyntaxHighlighter>
+          )}
+        </Suspense>
       </div>
     </div>
   );

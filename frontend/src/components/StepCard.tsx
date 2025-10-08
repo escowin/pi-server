@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronRight, CheckCircle, AlertTriangle, Lightbulb } from 'lucide-react';
-import CodeBlock from './CodeBlock';
+import SimpleCodeBlock from './SimpleCodeBlock';
 import { Step } from '../types';
 
 interface StepCardProps {
@@ -108,7 +108,7 @@ export default function StepCard({ step, stepNumber, onToggleComplete }: StepCar
             {isExpanded && (
               <div className="space-y-4">
                 {step.codeBlocks.map((codeBlock) => (
-                  <CodeBlock
+                  <SimpleCodeBlock
                     key={codeBlock.id}
                     code={codeBlock.code}
                     language={codeBlock.language}
